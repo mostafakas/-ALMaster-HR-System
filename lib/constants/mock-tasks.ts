@@ -1,0 +1,88 @@
+import { Task } from "../types/task";
+
+export const MOCK_TASKS: Task[] = [
+  {
+    id: "1",
+    title: "Review The Latest Articles",
+    project: "Diyar Platform",
+    department: "Content Writing",
+    status: "To Do",
+    assignees: [
+      { name: "User 1", image: "https://ui.shadcn.com/avatars/01.png" },
+      { name: "User 2", image: "https://ui.shadcn.com/avatars/02.png" },
+      { name: "User 3", image: "https://ui.shadcn.com/avatars/03.png" },
+    ],
+    dueDate: "12/2/2026",
+    creator: { name: "Creator", image: "https://ui.shadcn.com/avatars/04.png" },
+  },
+  {
+    id: "2",
+    title: "Develop AI Core Model",
+    project: "Diyar Platform",
+    department: "Artificial Intelligence",
+    status: "To Do",
+    assignees: [
+      { name: "User 2", image: "https://ui.shadcn.com/avatars/02.png" },
+      { name: "User 3", image: "https://ui.shadcn.com/avatars/03.png" },
+      { name: "User 4", image: "https://ui.shadcn.com/avatars/04.png" },
+    ],
+    dueDate: "15/2/2026",
+    creator: { name: "Creator", image: "https://ui.shadcn.com/avatars/05.png" },
+  },
+  {
+    id: "3",
+    title: "UI Design Polish",
+    project: "Diyar Platform",
+    department: "Design",
+    status: "In Progress",
+    assignees: [
+      { name: "User 3", image: "https://ui.shadcn.com/avatars/03.png" },
+      { name: "User 1", image: "https://ui.shadcn.com/avatars/01.png" },
+      { name: "User 5", image: "https://ui.shadcn.com/avatars/05.png" },
+    ],
+    dueDate: "10/2/2026",
+    creator: { name: "Creator", image: "https://ui.shadcn.com/avatars/01.png" },
+  },
+  {
+    id: "4",
+    title: "Client Feedback Implementation",
+    project: "Diyar Platform",
+    department: "Content Writing",
+    status: "Waiting Review",
+    assignees: [
+      { name: "User 1", image: "https://ui.shadcn.com/avatars/01.png" },
+      { name: "User 4", image: "https://ui.shadcn.com/avatars/04.png" },
+      { name: "User 2", image: "https://ui.shadcn.com/avatars/02.png" },
+    ],
+    dueDate: "05/2/2026",
+    creator: { name: "Creator", image: "https://ui.shadcn.com/avatars/02.png" },
+  },
+  {
+    id: "5",
+    title: "Initial Research Phase",
+    project: "Diyar Platform",
+    department: "Artificial Intelligence",
+    status: "Done",
+    assignees: [
+      { name: "User 4", image: "https://ui.shadcn.com/avatars/04.png" },
+      { name: "User 5", image: "https://ui.shadcn.com/avatars/05.png" },
+      { name: "User 3", image: "https://ui.shadcn.com/avatars/03.png" },
+    ],
+    dueDate: "01/2/2026",
+    creator: { name: "Creator", image: "https://ui.shadcn.com/avatars/03.png" },
+  },
+  {
+    id: "6",
+    title: "Drafting API Documentation",
+    project: "Diyar Platform",
+    department: "Content Writing",
+    status: "Done",
+    assignees: [
+      { name: "User 2", image: "https://ui.shadcn.com/avatars/02.png" },
+      { name: "User 5", image: "https://ui.shadcn.com/avatars/05.png" },
+      { name: "User 1", image: "https://ui.shadcn.com/avatars/01.png" },
+    ],
+    dueDate: "28/1/2026",
+    creator: { name: "Creator", image: "https://ui.shadcn.com/avatars/01.png" },
+  },
+];

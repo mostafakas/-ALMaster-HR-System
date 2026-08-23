@@ -1,0 +1,14 @@
+{
+  "mcpServers": [
+    {
+      "name": "cortex",
+      "command": "node",
+      "args": [
+        "/Applications/Cortex.app/Contents/Resources/command-center-mcp/index.js"
+      ],
+      "env": {
+        "TRACKER_DB_PATH": "/Users/ahmed.s/Library/Application Support/cortex/proj_1781980976281_0.sqlite"
+      }
+    }
+  ]
+}
