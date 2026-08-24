@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "almaster-super-secret-key-2026";
 
-export function signToken(payload: object, expiresIn = "7d") {
+export function signToken(payload: object, expiresIn: any = "7d") {
   return jwt.sign(payload, JWT_SECRET, { expiresIn });
 }
 
