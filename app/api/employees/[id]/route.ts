@@ -3,11 +3,12 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const employee = await prisma.employee.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { department: true },
     });
     if (!employee) {
@@ -21,9 +22,10 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     
     if (body.permissions && typeof body.permissions === 'object') {
@@ -43,7 +45,7 @@ export async function PATCH(
     }
 
     const employee = await prisma.employee.update({
-      where: { id: params.id },
+      where: { id },
       data: body,
       include: { department: true },
     });
@@ -55,11 +57,12 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await prisma.employee.delete({
-      where: { id: params.id },
+      where: { id },
     });
     return NextResponse.json({ success: true, message: "Employee deleted" });
   } catch (error: any) {
