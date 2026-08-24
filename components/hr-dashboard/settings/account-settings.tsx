@@ -33,7 +33,7 @@ export function AccountSettings() {
     defaultValues: {
       fullName: user?.name || "",
       emailAddress: user?.email || "",
-      phoneNumber: user?.phone || "",
+      phoneNumber: "",
     },
   });
 
@@ -43,7 +43,7 @@ export function AccountSettings() {
       form.reset({
         fullName: user.name || "",
         emailAddress: user.email || "",
-        phoneNumber: user.phone || "",
+        phoneNumber: "",
       });
     }
   }, [user, form]);
