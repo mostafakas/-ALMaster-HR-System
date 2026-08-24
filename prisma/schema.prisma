@@ -15,6 +15,76 @@ model User {
   fullName  String
   role      String   @default("Default")
   avatarUrl String?
+  employee  Employee?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Department {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  employees   Employee[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Employee {
+  id                       String      @id @default(uuid())
+  // Personal Info
+  fullName                 String
+  email                    String      @unique
+  phoneNumber              String?
+  countryCode              String?
+  birthDate                DateTime?
+  gender                   String?
+  nationality              String?
+  maritalStatus            String?
+  personalAddress          String?
+  emergencyContactName     String?
+  emergencyContactPhone    String?
+  emergencyContactRelation String?
+
+  // Employment Info
+  jobTitle                 String
+  seniorityLevel           String
+  departmentId             String?
+  department               Department? @relation(fields: [departmentId], references: [id])
+  role                     String
+  joinDate                 DateTime?
+  probationEndDate         DateTime?
+  workLocation             String?
+  contractType             String?
+  workingHoursFrom         String?
+  workingHoursTo           String?
+  permissions              String?     // Stored as JSON string
+
+  // Bank Info
+  bankName                 String?
+  bankBranch               String?
+  accountHolderName        String?
+  iban                     String?
+  swiftCode                String?
+  currency                 String?
+  salary                   String?
+  salaryDay                String?
+
+  // Document Identity
+  nationalIdNumber         String?
+  nationalIdExpiry         DateTime?
+  passportNumber           String?
+  passportExpiry           DateTime?
+  drivingLicenseNumber     String?
+  drivingLicenseExpiry     DateTime?
+  nationalIdFrontFile      String?
+  nationalIdBackFile       String?
+  passportFile             String?
+  contractFile             String?
+
+  userId                   String?     @unique
+  user                     User?       @relation(fields: [userId], references: [id])
+
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime    @updatedAt
+}
+
