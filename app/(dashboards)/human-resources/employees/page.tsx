@@ -32,15 +32,15 @@ export default function EmployeesPage() {
       <EmployeeProfilePanel
         employee={{
           id: selectedEmployee.id,
-          name: selectedEmployee.name,
-          role: selectedEmployee.role,
+          name: selectedEmployee.originalData?.fullName || selectedEmployee.name,
+          role: selectedEmployee.originalData?.jobTitle || selectedEmployee.role,
           status: selectedEmployee.status,
           avatar: selectedEmployee.avatar,
-          email: `${selectedEmployee.name.toLowerCase().replace(" ", ".")}@almaster.co`,
-          phone: "+20 1012345678",
-          department: "Graphic Design Department",
-          jobTitle: selectedEmployee.role,
-          levelOfAuthority: "Team Lead",
+          email: selectedEmployee.originalData?.email || `${selectedEmployee.name.toLowerCase().replace(" ", ".")}@almaster.co`,
+          phone: selectedEmployee.originalData?.phoneNumber || "N/A",
+          department: selectedEmployee.originalData?.department?.name || "Unassigned",
+          jobTitle: selectedEmployee.originalData?.jobTitle || selectedEmployee.role,
+          levelOfAuthority: selectedEmployee.originalData?.seniorityLevel || "Employee",
         }}
       />
 

@@ -6,7 +6,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { employeeSchema, type EmployeeValues } from "@/lib/validations/employee";
-import { submitEmployee } from "@/lib/api-service";
+import { useAddEmployeeMutation } from "@/lib/store/services/employeeApi";
 import { useFormMutation } from "@/hooks/form/use-form-mutation";
 import { BaseModal } from "@/components/hr-dashboard/modals/base-modal";
 import { EmployeeForm } from "@/components/hr-dashboard/modals/employee-form";
@@ -57,17 +57,17 @@ export function AddEmployeeModal({
 
   const { control, reset } = form;
   const fullName = useWatch({ control, name: "fullName" });
+  
+  const [addEmployee, { isLoading }] = useAddEmployeeMutation();
 
-  const { handleSubmit, isLoading } = useFormMutation({
-    form,
-    mutationFn: submitEmployee,
-    onSuccess: () => {
+  const handleSubmit = form.handleSubmit(async (values) => {
+    try {
+      await addEmployee(values).unwrap();
       reset();
       onOpenChange(false);
-    },
-    onError: (error: string) => {
+    } catch (error) {
       console.error("Submission failed:", error);
-    },
+    }
   });
 
   React.useEffect(() => {

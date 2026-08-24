@@ -9,6 +9,7 @@ export interface Employee {
   department?: string;
   status: EmployeeStatus;
   avatar?: string;
+  originalData?: any;
 }
 
 interface EmployeeState {

@@ -15,6 +15,8 @@ function useDebounce<T>(value: T, delay = 300): T {
   return debounced;
 }
 
+import { useGetEmployeesQuery } from "@/lib/store/services/employeeApi";
+
 // Swap this function body for an API call when backend is ready.
 // Signature stays the same: (query, departments) => filtered departments.
 function filterDepartments(query: string, deps: Department[]): Department[] {
@@ -49,6 +51,7 @@ interface Employee {
   role: string;
   status: EmployeeStatus;
   avatar?: string;
+  originalData?: any;
 }
 
 interface Department {
@@ -57,33 +60,6 @@ interface Department {
 }
 
 const AVATAR_DEFAULT = "https://ui.shadcn.com/avatars/01.png";
-const AVATAR_2 = "https://ui.shadcn.com/avatars/02.png";
-const AVATAR_3 = "https://ui.shadcn.com/avatars/03.png";
-const AVATAR_4 = "https://ui.shadcn.com/avatars/04.png";
-
-const departments: Department[] = [
-  {
-    name: "Programming Team",
-    employees: [
-      { id: "4", name: "John Smith", role: "Content Manager", status: "Online", avatar: AVATAR_4 },
-      { id: "5", name: "Emily Davis", role: "Senior Developer", status: "IDLE", avatar: AVATAR_2 },
-      { id: "1", name: "Daniel Brown", role: "Company Super Admin", status: "Online", avatar: AVATAR_DEFAULT },
-    ],
-  },
-  {
-    name: "Graphic Design Team",
-    employees: [
-      { id: "2", name: "Sarah Johnson", role: "UI/UX Designer", status: "Meeting", avatar: AVATAR_2 },
-      { id: "3", name: "Mark Williams", role: "Graphic Designer", status: "Break", avatar: AVATAR_3 },
-    ],
-  },
-  {
-    name: "HR Department",
-    employees: [
-      { id: "6", name: "Alex Turner", role: "HR Specialist", status: "Offline", avatar: AVATAR_3 },
-    ],
-  },
-];
 
 interface EmployeeListPanelProps {
   selectedEmployeeId?: string;
@@ -105,7 +81,7 @@ function EmployeeAvatar({ src, status }: { src?: string; status: EmployeeStatus 
         />
       </div>
       <div
-        className={cn("absolute size-[6.667px] rounded-full z-10 border border-white", STATUS_CONFIG[status].dot)}
+        className={cn("absolute size-[6.667px] rounded-full z-10 border border-white", STATUS_CONFIG[status]?.dot || STATUS_CONFIG.Offline.dot)}
         style={{ bottom: "1.67px", right: "1.67px" }}
         data-node-id="137:6771"
       />
@@ -140,7 +116,7 @@ const EmployeeCard = React.memo(function EmployeeCard({
     >
       {/* Left: avatar + name/role */}
       <div className="flex items-center gap-2 shrink-0">
-        <EmployeeAvatar src={employee.avatar} status={employee.status} />
+        <EmployeeAvatar src={employee.avatar} status={employee.status || "Offline"} />
         <div className="flex flex-col gap-1 items-start">
           <div className="flex items-center gap-1">
             <Typography as="span" className="text-sm font-bold text-foreground leading-[16px] whitespace-nowrap">
@@ -158,15 +134,15 @@ const EmployeeCard = React.memo(function EmployeeCard({
       <div
         className={cn(
           "flex items-center justify-center px-1.5 py-[3px] rounded-[6px] shrink-0",
-          STATUS_CONFIG[employee.status].bg
+          (STATUS_CONFIG[employee.status] || STATUS_CONFIG.Offline).bg
         )}
       >
         <Typography
           as="span"
           className="text-[10px] font-bold leading-[14px] whitespace-nowrap"
-          style={{ color: STATUS_CONFIG[employee.status].color }}
+          style={{ color: (STATUS_CONFIG[employee.status] || STATUS_CONFIG.Offline).color }}
         >
-          {STATUS_CONFIG[employee.status].label}
+          {(STATUS_CONFIG[employee.status] || STATUS_CONFIG.Offline).label}
         </Typography>
       </div>
     </button>
@@ -242,10 +218,31 @@ export function EmployeeListPanel({
     "Programming Team": true,
   });
 
+  const { data: apiData, isLoading } = useGetEmployeesQuery();
+
+  const departments = React.useMemo(() => {
+    if (!apiData || !apiData.items) return [];
+    const grouped: Record<string, Employee[]> = {};
+    
+    apiData.items.forEach((item: any) => {
+      const deptName = item.department?.name || "Unassigned";
+      if (!grouped[deptName]) grouped[deptName] = [];
+      grouped[deptName].push({
+        id: item.id,
+        name: item.fullName || "Unknown",
+        role: item.jobTitle || item.role || "Employee",
+        status: "Online", // Or logic to map status
+        originalData: item
+      });
+    });
+
+    return Object.entries(grouped).map(([name, employees]) => ({ name, employees }));
+  }, [apiData]);
+
   const debouncedSearch = useDebounce(search, 300);
   const visibleDepartments = React.useMemo(
     () => filterDepartments(debouncedSearch, departments),
-    [debouncedSearch]
+    [debouncedSearch, departments]
   );
   const isSearching = debouncedSearch.trim().length > 0;
 
