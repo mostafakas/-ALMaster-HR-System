@@ -4,7 +4,9 @@ import * as React from "react"
 import { Palette, Edit2, PartyPopper, ChevronDown } from "lucide-react"
 import { EmployeeCard } from "./employee-card"
 import { cn } from "@/lib/utils"
-import { HR_EMPLOYEE_FILTERS, HR_DEPARTMENTS_MOCK } from "@/lib/constants/hr-employees"
+import { HR_EMPLOYEE_FILTERS } from "@/lib/constants/hr-employees"
+import { useGetDepartmentsQuery } from "@/lib/store/services/departmentApi"
+import { useGetEmployeesQuery } from "@/lib/store/services/employeeApi"
 
 const departmentIcons: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
   "Graphic Design Team": Palette,
@@ -14,10 +16,10 @@ const departmentIcons: Record<string, React.ComponentType<{ className?: string; 
 
 
 export function EmployeeGrid() {
-  const [expandedSections, setExpandedSections] = React.useState<Record<string, boolean>>({
-    "Graphic Design Team": true,
-    "Artificial Intelligence Team": true
-  })
+  const { data: deptData } = useGetDepartmentsQuery()
+  const { data: empData } = useGetEmployeesQuery()
+
+  const [expandedSections, setExpandedSections] = React.useState<Record<string, boolean>>({})
 
   const toggleSection = (name: string) => {
     setExpandedSections(prev => ({
@@ -25,6 +27,21 @@ export function EmployeeGrid() {
       [name]: !prev[name]
     }))
   }
+
+  const departments = deptData?.items || []
+  const employees = empData?.items || []
+
+  // Group employees by department
+  const groupedDepts = departments.map(dept => {
+    const deptEmployees = employees.filter(e => e.departmentId === dept.id)
+    return {
+      ...dept,
+      employees: deptEmployees,
+      employeesCount: deptEmployees.length,
+      onlineCount: deptEmployees.length, // Simplified for now since we don't have real-time status yet
+      color: "#0047FF", // Default color
+    }
+  }).filter(d => d.employeesCount > 0) // Only show departments with employees on the dashboard
 
   return (
     <div className="flex flex-col gap-8 p-6">
@@ -43,15 +60,21 @@ export function EmployeeGrid() {
              >
                 {filter.label}
              </button>
-
           ))}
         </div>
       </div>
 
       {/* Departments Grid Sections */}
       <div className="flex flex-col gap-6">
-        {HR_DEPARTMENTS_MOCK.map((dept, i) => {
-          const isExpanded = expandedSections[dept.name]
+        {groupedDepts.length === 0 && (
+          <div className="w-full bg-muted rounded-2xl p-8 flex items-center justify-center">
+            <p className="text-muted-foreground font-bold">No employees found. Add employees to see them here.</p>
+          </div>
+        )}
+        
+        {groupedDepts.map((dept, i) => {
+          // Default to expanded for now since we map them dynamically
+          const isExpanded = expandedSections[dept.name] !== false 
           const IconComp = departmentIcons[dept.name] || Palette;
           
           return (
@@ -60,7 +83,7 @@ export function EmployeeGrid() {
               className="w-full bg-muted rounded-2xl p-4 flex flex-col gap-5 transition-all"
             >
 
-              {/* 75:3058 / 75:3071 - Section Header Container */}
+              {/* Section Header Container */}
               <div className="flex items-center justify-between w-full h-[36px]">
                 <div className="flex items-center gap-2.5">
                     <div className="flex items-center gap-2">
@@ -98,7 +121,14 @@ export function EmployeeGrid() {
               {isExpanded && dept.employees.length > 0 && (
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {dept.employees.map((emp, j) => (
-                      <EmployeeCard key={j} {...emp} />
+                      <EmployeeCard 
+                        key={j} 
+                        name={emp.fullName || (emp as any).user?.name || "Unknown"}
+                        role={emp.jobTitle || (emp as any).role || "Employee"}
+                        status="Online"
+                        avatar={(emp as any).user?.image || ""}
+                        isFreelance={emp.jobTitle?.includes("Freelancer")}
+                      />
                     ))}
                  </div>
               )}

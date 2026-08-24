@@ -10,7 +10,7 @@ import type { TaskMember, TaskRecord } from "@/lib/types/task";
 export const TASK_MEMBERS: TaskMember[] = [
   {
     id: "u1",
-    name: "Daniel Brown",
+    name: "",
     role: "Super Admin",
     avatar: "https://ui.shadcn.com/avatars/01.png",
   },
@@ -22,13 +22,13 @@ export const TASK_MEMBERS: TaskMember[] = [
   },
   {
     id: "u3",
-    name: "Daniel Scott",
+    name: "",
     role: "Content Creator",
     avatar: "https://ui.shadcn.com/avatars/03.png",
   },
   {
     id: "u4",
-    name: "John Smith",
+    name: "",
     role: "Content Manager",
     avatar: "https://ui.shadcn.com/avatars/04.png",
   },
@@ -151,7 +151,7 @@ export const MOCK_TASK_RECORDS: TaskRecord[] = [
       {
         id: "c-1",
         authorId: "u3",
-        authorName: "Daniel Scott",
+        authorName: "",
         authorRole: "Content Writer",
         authorAvatar: "https://ui.shadcn.com/avatars/03.png",
         content: "When will you finish this task?",
@@ -160,7 +160,7 @@ export const MOCK_TASK_RECORDS: TaskRecord[] = [
       {
         id: "c-2",
         authorId: "u1",
-        authorName: "Daniel Brown",
+        authorName: "",
         authorRole: "Super Admin",
         authorAvatar: "https://ui.shadcn.com/avatars/01.png",
         content: "I will hand it off to you in 2 hours",
@@ -169,7 +169,7 @@ export const MOCK_TASK_RECORDS: TaskRecord[] = [
       {
         id: "c-3",
         authorId: "u3",
-        authorName: "Daniel Scott",
+        authorName: "",
         authorRole: "Content Writer",
         authorAvatar: "https://ui.shadcn.com/avatars/03.png",
         content:

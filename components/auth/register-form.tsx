@@ -98,7 +98,7 @@ export function RegisterForm() {
             <Input
               id="fullName"
               type="text"
-              placeholder="John Smith"
+              placeholder=""
               className="bg-secondary border-none h-10 px-4 rounded-lg text-[12px] text-muted-foreground placeholder:text-muted-foreground/50 focus-visible:ring-primary/20"
               {...form.register("fullName")}
             />

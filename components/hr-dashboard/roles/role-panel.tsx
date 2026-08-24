@@ -41,7 +41,7 @@ export const rolesData: RoleData[] = [
     level: 5,
     theme: "primary",
     icon: Building2,
-    membersCount: 2,
+    membersCount: 0,
     permissions: {
       createUsers: true,
       editUsers: true,
@@ -66,7 +66,7 @@ export const rolesData: RoleData[] = [
     level: 4,
     theme: "warning",
     icon: Users,
-    membersCount: 1,
+    membersCount: 0,
     permissions: {
       createUsers: true,
       editUsers: true,
@@ -91,7 +91,7 @@ export const rolesData: RoleData[] = [
     level: 3,
     theme: "success",
     icon: UserCheck,
-    membersCount: 3,
+    membersCount: 0,
     permissions: {
       createUsers: true,
       editUsers: true,
@@ -116,7 +116,7 @@ export const rolesData: RoleData[] = [
     level: 2,
     theme: "ai",
     icon: Crown,
-    membersCount: 6,
+    membersCount: 0,
     permissions: {
       createUsers: false,
       editUsers: true,
@@ -141,7 +141,7 @@ export const rolesData: RoleData[] = [
     level: 1,
     theme: "destructive",
     icon: User,
-    membersCount: 12,
+    membersCount: 0,
     permissions: {
       createUsers: false,
       editUsers: false,

@@ -41,7 +41,7 @@ export interface ProjectRecord {
 const SAMPLE_MEMBERS: ProjectMember[] = [
   {
     id: "m1",
-    name: "Daniel Brown",
+    name: "",
     role: "Web Developer",
     avatar: "https://ui.shadcn.com/avatars/01.png",
   },

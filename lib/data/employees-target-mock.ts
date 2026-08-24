@@ -90,7 +90,7 @@ const buildEmployee = (
   bonusTasks?: number
 ): EmployeeTargetRecord => ({
   id,
-  name: "Daniel Brown",
+  name: "",
   role: "Company Super Admin",
   avatar: AVATAR,
   status: "online",
@@ -108,7 +108,7 @@ const buildEmployee = (
     completed: 16,
     overdue: 12,
   },
-  activities: baseActivities("Daniel Brown"),
+  activities: baseActivities(""),
 });
 
 export const EMPLOYEE_TARGET_TEAMS: EmployeeTeamGroup[] = [

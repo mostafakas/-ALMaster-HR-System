@@ -105,69 +105,7 @@ interface Team {
   employees: Employee[];
 }
 
-const mockTeamsByRole: Record<string, Team[]> = {
-  "almaster-ceo": [
-    {
-      id: "t1",
-      name: "Graphic Design Team",
-      icon: Palette,
-      employees: [
-        { id: "e1", name: "Daniel Brown", title: "Company Super Admin", avatar: "https://ui.shadcn.com/avatars/01.png", online: true },
-      ],
-    },
-  ],
-  "hr-manager": [
-    {
-      id: "t1",
-      name: "Marketing Team",
-      icon: Users,
-      employees: [
-        { id: "e1", name: "Daniel Brown", title: "HR Director", avatar: "https://ui.shadcn.com/avatars/02.png", online: true },
-      ],
-    },
-  ],
-  "supervisor": [
-    {
-      id: "t1",
-      name: "Graphic Design Team",
-      icon: Palette,
-      employees: [
-        { id: "e1", name: "Daniel Brown", title: "Company Super Admin", avatar: "https://ui.shadcn.com/avatars/01.png", online: true },
-        { id: "e2", name: "Daniel Brown", title: "Company Super Admin", avatar: "https://ui.shadcn.com/avatars/01.png", online: true },
-      ],
-    },
-    {
-      id: "t2",
-      name: "Artificial Intelligence Team",
-      icon: Sparkles,
-      employees: [
-        { id: "e3", name: "Daniel Brown", title: "Company Super Admin", avatar: "https://ui.shadcn.com/avatars/01.png", online: true },
-      ],
-    },
-  ],
-  "team-leader": [
-    {
-      id: "t1",
-      name: "Engineering Team",
-      icon: Building2,
-      employees: [
-        { id: "e1", name: "Daniel Brown", title: "Tech Lead", avatar: "https://ui.shadcn.com/avatars/03.png", online: false },
-        { id: "e2", name: "Sarah Connor", title: "Senior Dev", avatar: "https://ui.shadcn.com/avatars/04.png", online: true },
-      ],
-    },
-  ],
-  "employee": [
-    {
-      id: "t1",
-      name: "Operations Team",
-      icon: Crown,
-      employees: [
-        { id: "e1", name: "John Doe", title: "Operations Staff", avatar: "https://ui.shadcn.com/avatars/05.png", online: false },
-        { id: "e2", name: "Jane Smith", title: "Support Staff", avatar: "https://ui.shadcn.com/avatars/02.png", online: true },
-      ],
-    },
-  ],
-};
+const mockTeamsByRole: Record<string, Team[]> = {};
 
 /* ─────────── main component ─────────── */
 

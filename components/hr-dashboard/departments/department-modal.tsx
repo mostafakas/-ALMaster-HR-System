@@ -47,7 +47,7 @@ const EMPLOYEES = [
   },
   {
     id: "3",
-    name: "Daniel Scott",
+    name: "",
     role: "Content Creator",
     avatar: "https://ui.shadcn.com/avatars/03.png",
   },
@@ -59,7 +59,7 @@ const EMPLOYEES = [
   },
   {
     id: "5",
-    name: "John Smith",
+    name: "",
     role: "Company Super Admin",
     avatar: "https://ui.shadcn.com/avatars/05.png",
   },

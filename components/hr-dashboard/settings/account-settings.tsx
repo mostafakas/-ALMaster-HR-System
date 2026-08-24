@@ -15,23 +15,38 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import { useAppSelector } from "@/lib/store/hooks";
+
 const profileSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   emailAddress: z.string().email("Invalid email address"),
-  phoneNumber: z.string().min(1, "Phone number is required"),
+  phoneNumber: z.string().min(1, "Phone number is required").optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export function AccountSettings() {
+  const user = useAppSelector((state) => state.auth.user);
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      fullName: "John Smith",
-      emailAddress: "johnsmith@almaster.com",
-      phoneNumber: "+20 1012345678",
+      fullName: user?.name || "",
+      emailAddress: user?.email || "",
+      phoneNumber: user?.phone || "",
     },
   });
+
+  // Re-sync form when user changes
+  React.useEffect(() => {
+    if (user) {
+      form.reset({
+        fullName: user.name || "",
+        emailAddress: user.email || "",
+        phoneNumber: user.phone || "",
+      });
+    }
+  }, [user, form]);
 
   function onSubmit(values: ProfileFormValues) {
     console.log("Saving profile:", values);

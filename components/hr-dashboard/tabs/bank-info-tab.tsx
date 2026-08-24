@@ -121,7 +121,7 @@ export function BankInfoTab({ form }: BankInfoTabProps) {
         </FormField>
 
         <FormField label="Account Holder Name" className="col-span-2">
-          <Input className={inputCls} {...register("accountHolderName")} placeholder="John Smith" />
+          <Input className={inputCls} {...register("accountHolderName")} placeholder="" />
         </FormField>
 
         <FormField label="IBAN Number" className="col-span-2">
