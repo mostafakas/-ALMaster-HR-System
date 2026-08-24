@@ -11,9 +11,7 @@ export const departmentSchema = z.object({
     .max(200, "Description is too long"),
   color: z.string().min(1, "Please select a color"),
   iconFile: z.string().optional(),
-  headIds: z
-    .array(z.string())
-    .min(1, "Select at least one department head"),
+  headIds: z.array(z.string()).optional(),
   employeeIds: z.array(z.string()).optional(),
 });
 

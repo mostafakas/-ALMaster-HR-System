@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useAddDepartmentMutation, useUpdateDepartmentMutation } from "@/lib/store/services/departmentApi";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Typography } from "@/components/ui/typography";
@@ -368,13 +369,22 @@ export function DepartmentModal({
     }
   }, [open, initialData, reset]);
 
+  const [addDepartment, { isLoading: isAdding }] = useAddDepartmentMutation();
+  const [updateDepartment, { isLoading: isUpdating }] = useUpdateDepartmentMutation();
+  
+  const isSubmitting = isAdding || isUpdating;
+
   const onSubmit: SubmitHandler<DepartmentValues> = async (data) => {
     try {
-      console.log(isEdit ? "Saving:" : "Creating:", data);
+      if (isEdit && initialData?.id) {
+        await updateDepartment({ id: initialData.id, data }).unwrap();
+      } else {
+        await addDepartment(data).unwrap();
+      }
       reset();
       onOpenChange(false);
     } catch (err) {
-      console.error(err);
+      console.error("Department save failed:", err);
     }
   };
 
