@@ -18,7 +18,7 @@ const EMPTY_FORM_VALUES: EmployeeValues = {
   countryCode: "+966",
   jobTitle: "",
   seniorityLevel: "",
-  department: "",
+  departmentId: "",
   role: "",
   permissions: {
     createUsers: false,

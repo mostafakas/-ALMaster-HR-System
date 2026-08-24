@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { type EmployeeValues } from "@/lib/validations/employee";
 import { useDisclosure } from "@/hooks/state/use-disclosure";
 import { FormFieldWrapper } from "@/components/shared/form/form-field-wrapper";
+import { useGetDepartmentsQuery } from "@/lib/store/services/departmentApi";
 
 interface EmployeeFormProps {
   form: UseFormReturn<EmployeeValues>;
@@ -170,38 +171,33 @@ export function EmployeeForm({ form, isEditMode }: EmployeeFormProps) {
               <FormFieldWrapper label="Department" error={errors.department?.message} className="flex-1">
                 <Controller
                   control={control}
-                  name="department"
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
+                  name="departmentId"
+                  render={({ field }) => {
+                    const { data: deptData } = useGetDepartmentsQuery();
+                    const depts = deptData?.items || [];
+                    const selectedDept = depts.find(d => d.id === field.value);
+                    
+                    return (
+                    <Select onValueChange={field.onChange} value={field.value || ""}>
                       <SelectTrigger className={cn(
                         "h-10! bg-secondary border-none px-4 py-0 rounded-xl text-[12px] font-bold! outline-none w-full! shadow-none font-janna leading-[22.4px] transition-all justify-between [&>svg]:size-[14px] [&>svg]:text-muted-foreground",
-                        field.value === "Programming" && "text-primary",
-                        field.value === "Design" && "text-foreground",
-                        field.value === "Marketing" && "text-foreground",
-                        !field.value && "text-muted-foreground",
-                        errors.department && "ring-1 ring-destructive"
+                        field.value ? "text-primary" : "text-muted-foreground",
+                        errors.departmentId && "ring-1 ring-destructive"
                       )}>
                         <div className="flex items-center gap-1.5">
-                          {field.value === "Programming" && <Code className="size-[14px] text-primary" />}
-                          {field.value === "Design" && <Palette className="size-[14px] text-foreground" />}
-                          {field.value === "Marketing" && <Megaphone className="size-[14px] text-foreground" />}
-                          {!field.value && <Code className="size-[14px] text-muted-foreground" />}
+                          <Code className={cn("size-[14px]", field.value ? "text-primary" : "text-muted-foreground")} />
                           <SelectValue placeholder="Select Department" className="placeholder:text-muted-foreground font-bold!" />
                         </div>
                       </SelectTrigger>
-                      <SelectContent alignItemWithTrigger={false} side="bottom" sideOffset={6} className="bg-white rounded-xl border border-border shadow-lg p-2 w-(--anchor) flex flex-col gap-1 font-janna font-bold">
-                        <SelectItem value="Programming" className="rounded-lg px-3 h-8 focus:bg-primary/5 data-[state=checked]:bg-primary/5 data-[state=checked]:text-primary transition-colors cursor-pointer outline-none text-primary font-bold text-[14px]">
-                          <div className="flex items-center gap-1.5"><Code className="size-[14px]" /><span>Programming</span></div>
-                        </SelectItem>
-                        <SelectItem value="Design" className="rounded-lg px-3 h-8 focus:bg-destructive/5 data-[state=checked]:bg-destructive/5 data-[state=checked]:text-destructive transition-colors cursor-pointer outline-none text-destructive font-bold text-[14px]">
-                          <div className="flex items-center gap-1.5"><Palette className="size-[14px]" /><span>Design</span></div>
-                        </SelectItem>
-                        <SelectItem value="Marketing" className="rounded-lg px-3 h-8 focus:bg-warning/5 data-[state=checked]:bg-warning/5 data-[state=checked]:text-warning transition-colors cursor-pointer outline-none text-warning font-bold text-[14px]">
-                          <div className="flex items-center gap-1.5"><Megaphone className="size-[14px]" /><span>Marketing</span></div>
-                        </SelectItem>
+                      <SelectContent alignItemWithTrigger={false} side="bottom" sideOffset={6} className="bg-white rounded-xl border border-border shadow-lg p-2 w-(--anchor) flex flex-col gap-1 font-janna font-bold max-h-48 overflow-y-auto">
+                        {depts.map(dept => (
+                          <SelectItem key={dept.id} value={dept.id} className="rounded-lg px-3 h-8 focus:bg-primary/5 data-[state=checked]:bg-primary/5 data-[state=checked]:text-primary transition-colors cursor-pointer outline-none text-foreground data-[state=checked]:font-bold text-[14px]">
+                            <div className="flex items-center gap-1.5"><Code className="size-[14px]" /><span>{dept.name}</span></div>
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
-                  )}
+                  )}}
                 />
               </FormFieldWrapper>
               <FormFieldWrapper label="Role (Authority level)" error={errors.role?.message} className="flex-1">

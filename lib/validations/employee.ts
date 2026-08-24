@@ -25,7 +25,7 @@ const personalInfoSchema = z.object({
 const employmentInfoSchema = z.object({
   jobTitle: z.string().min(1, "Job title is required"),
   seniorityLevel: z.string().min(1, "Seniority level is required"),
-  department: z.string().min(1, "Department is required"),
+  departmentId: z.string().min(1, "Department is required"),
   role: z.string().min(1, "Role is required"),
   joinDate: z.date().optional(),
   probationEndDate: z.date().optional(),

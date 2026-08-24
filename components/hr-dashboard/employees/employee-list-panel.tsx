@@ -16,6 +16,7 @@ function useDebounce<T>(value: T, delay = 300): T {
 }
 
 import { useGetEmployeesQuery } from "@/lib/store/services/employeeApi";
+import { useAppSelector } from "@/lib/store/hooks";
 
 // Swap this function body for an API call when backend is ready.
 // Signature stays the same: (query, departments) => filtered departments.
@@ -249,12 +250,14 @@ export function EmployeeListPanel({
   const toggleSection = (name: string) =>
     setExpandedDepts((prev) => ({ ...prev, [name]: !prev[name] }));
 
+  const authUser = useAppSelector((state) => state.auth.user);
+
   const ME: Employee = {
-    id: "me",
-    name: "Daniel Brown",
-    role: "Company Super Admin",
+    id: authUser?.id || "me",
+    name: authUser?.name || "Daniel Brown",
+    role: authUser?.role || "Company Super Admin",
     status: "Online",
-    avatar: AVATAR_DEFAULT,
+    avatar: authUser?.avatar || AVATAR_DEFAULT,
   };
 
   return (
