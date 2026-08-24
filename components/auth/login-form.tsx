@@ -53,7 +53,7 @@ export function LoginForm() {
           })
         );
       }
-      window.location.href = "/human-resources";
+      window.location.href = "/";
     } catch (err: any) {
       const msg =
         err?.data?.message ||
