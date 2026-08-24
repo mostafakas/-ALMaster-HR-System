@@ -30,7 +30,7 @@ export const SYSTEMS: SystemDefinition[] = [
     description: "Manage, Track your Employees, Departments",
     icon: IdCard,
     href: "/human-resources",
-    devOnly: true,
+    devOnly: false,
   },
   {
     id: "pm",
@@ -39,7 +39,7 @@ export const SYSTEMS: SystemDefinition[] = [
     description: "Manage, Track your Projects, Tasks.",
     icon: Database,
     href: "/project-management",
-    devOnly: true,
+    devOnly: false,
   },
   {
     id: "crm",
@@ -57,7 +57,7 @@ export const SYSTEMS: SystemDefinition[] = [
     description: "Manage company finances.",
     icon: Banknote,
     href: "/finances-management",
-    devOnly: true,
+    devOnly: false,
   },
 ];
 
