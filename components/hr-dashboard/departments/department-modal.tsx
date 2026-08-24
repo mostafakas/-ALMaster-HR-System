@@ -371,8 +371,7 @@ export function DepartmentModal({
 
   const [addDepartment, { isLoading: isAdding }] = useAddDepartmentMutation();
   const [updateDepartment, { isLoading: isUpdating }] = useUpdateDepartmentMutation();
-  
-  const isSubmitting = isAdding || isUpdating;
+  const isSaving = isAdding || isUpdating;
 
   const onSubmit: SubmitHandler<DepartmentValues> = async (data) => {
     try {
@@ -535,7 +534,7 @@ export function DepartmentModal({
                 </Button>
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isSaving}
                   className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground gap-[8px] h-[40px] rounded-[12px] font-bold text-[12px] shadow-none transition-all active:scale-[0.98] font-janna">
                   <Check className="size-[12px]" strokeWidth={3} />
                   {isEdit ? "Save Changes" : "Create Department"}
