@@ -54,7 +54,7 @@ export function RegisterForm() {
           })
         );
       }
-      window.location.href = "/client-relations-management";
+      window.location.href = "/human-resources";
     } catch (err: any) {
       const msg =
         err?.data?.message ||
