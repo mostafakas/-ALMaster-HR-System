@@ -18,6 +18,7 @@ const navItems = [
   { icon: Icons.users, label: "Employees", href: "/human-resources/employees" },
   { icon: Icons.messages, label: "Messages", href: "/human-resources/messages" },
   { icon: Icons.departments, label: "Departments", href: "/human-resources/departments" },
+  { icon: Icons.activity, label: "Live Tracking", href: "/human-resources/tracking" },
   { icon: Icons.documents, label: "Documents", href: "/human-resources/documents" },
   { icon: Icons.roles, label: "Roles & Permissions", href: "/human-resources/roles" },
   { icon: Icons.calendar, label: "Vacation Balance", href: "/human-resources/vacation-balance" },

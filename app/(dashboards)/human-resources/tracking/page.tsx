@@ -20,7 +20,7 @@ export default function LiveTrackingPage() {
             >
               <Plus className="size-[12px] text-white shrink-0" />
               <span className="[word-break:break-word] font-bold leading-[22.4px] not-italic relative shrink-0 text-[12px] text-white whitespace-nowrap" dir="auto">
-                Create New Role
+                Add Tracking Session
               </span>
             </button>
           </div>

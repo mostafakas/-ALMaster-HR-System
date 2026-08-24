@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getAuthedUser, unauthorizedResponse } from "@/lib/auth/require-auth";
+import { employeeCreateSchema, safeParse } from "@/lib/validations/server";
 
 export async function GET(request: Request) {
+  const auth = getAuthedUser(request);
+  if (!auth) return unauthorizedResponse();
+
   try {
     const url = new URL(request.url);
     const search = url.searchParams.get("search") || "";
@@ -40,11 +45,21 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const auth = getAuthedUser(request);
+  if (!auth) return unauthorizedResponse();
+
   try {
-    const body = await request.json();
-    
+    const rawBody = await request.json();
+    const parsed = safeParse(employeeCreateSchema, rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ success: false, message: parsed.message }, { status: 400 });
+    }
+    const body = parsed.data;
+
     // permissions is JSON string or object
-    const permissionsStr = typeof body.permissions === 'object' ? JSON.stringify(body.permissions) : body.permissions;
+    const permissionsStr = typeof body.permissions === "object" && body.permissions !== null
+      ? JSON.stringify(body.permissions)
+      : body.permissions;
 
     const employee = await prisma.employee.create({
       data: {
@@ -60,7 +75,7 @@ export async function POST(request: Request) {
         emergencyContactName: body.emergencyContactName,
         emergencyContactPhone: body.emergencyContactPhone,
         emergencyContactRelation: body.emergencyContactRelation,
-        
+
         jobTitle: body.jobTitle,
         seniorityLevel: body.seniorityLevel,
         departmentId: body.departmentId || null,
@@ -71,7 +86,7 @@ export async function POST(request: Request) {
         contractType: body.contractType,
         workingHoursFrom: body.workingHoursFrom,
         workingHoursTo: body.workingHoursTo,
-        permissions: permissionsStr,
+        permissions: permissionsStr as string | undefined,
 
         bankName: body.bankName,
         bankBranch: body.bankBranch,
@@ -96,6 +111,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, data: employee }, { status: 201 });
   } catch (error: any) {
+    // Prisma unique constraint (duplicate email) -> friendlier message
+    if (error?.code === "P2002") {
+      return NextResponse.json(
+        { success: false, message: "An employee with this email already exists." },
+        { status: 409 }
+      );
+    }
     return NextResponse.json({ success: false, message: error.message }, { status: 400 });
   }
 }
