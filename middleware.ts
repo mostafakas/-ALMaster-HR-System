@@ -10,30 +10,7 @@ const DEV_ROUTES = [
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isDevMode =
-    process.env.NODE_ENV !== "production" ||
-    process.env.NEXT_PUBLIC_ENABLE_ALL_SYSTEMS === "true";
-
-  if (!isDevMode) {
-    // In production, redirect root to CRM
-    if (pathname === "/") {
-      return NextResponse.redirect(
-        new URL("/client-relations-management", request.url),
-      );
-    }
-
-    // In production, block direct access to development-only systems
-    const isDevRoute = DEV_ROUTES.some(
-      (route) => pathname === route || pathname.startsWith(`${route}/`),
-    );
-
-    if (isDevRoute) {
-      return NextResponse.redirect(
-        new URL("/client-relations-management", request.url),
-      );
-    }
-  }
-
+  // All systems are now enabled in production
   return NextResponse.next();
 }
 
