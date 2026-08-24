@@ -236,7 +236,7 @@ export function EmployeeCard({
             countryCode: "+966",
             jobTitle: role,
             seniorityLevel: "Senior",
-            department: "Programming",
+            departmentId: "Programming",
             role: "Employee",
             permissions: {
               createUsers: true,

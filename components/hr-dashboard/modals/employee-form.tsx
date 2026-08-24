@@ -168,7 +168,7 @@ export function EmployeeForm({ form, isEditMode }: EmployeeFormProps) {
             </div>
 
             <div className="flex gap-3 w-full">
-              <FormFieldWrapper label="Department" error={errors.department?.message} className="flex-1">
+              <FormFieldWrapper label="Department" error={errors.departmentId?.message} className="flex-1">
                 <Controller
                   control={control}
                   name="departmentId"

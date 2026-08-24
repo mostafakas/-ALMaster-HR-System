@@ -180,7 +180,7 @@ export function EmploymentInfoTab({ form }: EmploymentInfoTabProps) {
         <FormField label="Department">
           <Controller
             control={control}
-            name="department"
+            name="departmentId"
             render={({ field }) => (
               <Select onValueChange={field.onChange} value={field.value ?? ""}>
                 <SelectTrigger className={selectTriggerCls}>

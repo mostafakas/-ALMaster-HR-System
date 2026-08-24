@@ -30,85 +30,7 @@ export interface Department {
 }
 
 
-export const departments: Department[] = [
-  {
-    id: "programming",
-    name: "Programming Department",
-    description:
-      "Software design, development, UI/UX, and technical operations.",
-    memberCount: 3,
-    headLabel: "Head",
-    headName: "John Smith",
-    icon: Briefcase,
-    color: "#0047FF",
-    iconBg: "rgba(0,71,255,0.1)",
-    theme: "primary",
-  },
-  {
-    id: "marketing",
-    name: "Marketing Department",
-    description: "Brand management, social ads, and digital marketing.",
-    memberCount: 5,
-    headLabel: "Manager",
-    headName: "John Smith",
-    icon: Megaphone,
-    color: "#F38328",
-    iconBg: "rgba(243,131,40,0.1)",
-    theme: "warning",
-  },
-  {
-    id: "graphic-design",
-    name: "Graphic Design Department",
-    description:
-      "Software design, development, UI/UX, and technical operations.",
-    memberCount: 3,
-    headLabel: "Manager",
-    headName: "John Smith",
-    icon: Palette,
-    color: "#00B927",
-    iconBg: "rgba(0,185,39,0.1)",
-    theme: "success",
-  },
-  {
-    id: "ai",
-    name: "Artificial Intelligence Department",
-    description:
-      "Software design, development, UI/UX, and technical operations.",
-    memberCount: 3,
-    headLabel: "Manager",
-    headName: "John Smith",
-    icon: Sparkles,
-    color: "#AA00FF",
-    iconBg: "rgba(170,0,255,0.1)",
-    theme: "ai",
-  },
-  {
-    id: "content",
-    name: "Content Writing Department",
-    description:
-      "Software design, development, UI/UX, and technical operations.",
-    memberCount: 3,
-    headLabel: "Manager",
-    headName: "John Smith",
-    icon: PenLine,
-    color: "#F55050",
-    iconBg: "rgba(245,80,80,0.1)",
-    theme: "destructive",
-  },
-  {
-    id: "finance",
-    name: "Finance Department",
-    description: "Software design, development, and technical operations.",
-    memberCount: 3,
-    headLabel: "Manager",
-    headName: "John Smith",
-    icon: Banknote,
-    color: "#08A1BC",
-    iconBg: "rgba(8,161,188,0.1)",
-    theme: "info",
-  },
 
-];
 
 interface DepartmentPanelProps {
   activeDepartmentId: string;
@@ -151,6 +73,8 @@ const themeBorderStyles: Record<Department["theme"], string> = {
   info: "border-info",
 };
 
+import { useGetDepartmentsQuery } from "@/lib/store/services/departmentApi";
+
 export function DepartmentPanel({
   activeDepartmentId,
   onSelect,
@@ -159,7 +83,24 @@ export function DepartmentPanel({
   const [search, setSearch] = React.useState("");
   const [modalOpen, setModalOpen] = React.useState(false);
 
-  const filtered = departments.filter((d) =>
+  const { data: apiData, isLoading } = useGetDepartmentsQuery();
+  const apiDepartments = React.useMemo(() => {
+    if (!apiData?.items) return [];
+    return apiData.items.map((item: any) => ({
+      id: item.id,
+      name: item.name,
+      description: item.description || "",
+      memberCount: item._count?.employees || 0,
+      headLabel: "Head" as const,
+      headName: "Mustafa Mahmoud",
+      icon: Briefcase,
+      color: "#0047FF",
+      iconBg: "rgba(0,71,255,0.1)",
+      theme: "primary" as const,
+    }));
+  }, [apiData]);
+
+  const filtered = apiDepartments.filter((d) =>
     d.name.toLowerCase().includes(search.toLowerCase()),
   );
 
@@ -203,67 +144,74 @@ export function DepartmentPanel({
 
         {/* Department list */}
         <div className="flex flex-col gap-[8px]">
-          {filtered.map((dept) => {
-            const isActive = dept.id === activeDepartmentId;
-            return (
-              <button
-                key={dept.id}
-                type="button"
-                onClick={() => onSelect(dept.id)}
-                className={cn(
-                  "w-full flex items-start gap-[12px] px-[12px] py-[11px] rounded-[8px] text-left transition-all duration-200 cursor-pointer border-l-4",
-                  isActive
-                    ? "bg-[rgba(0,71,255,0.1)] border-[#0047ff]"
-                    : "bg-[#edf2f7] border-l-transparent hover:bg-[#edf2f7]/80",
-                )}>
-
-                {/* Icon */}
-                <div
+          {isLoading ? (
+            <Typography as="p" className="text-xs text-muted-foreground font-bold text-center py-4">Loading...</Typography>
+          ) : filtered.length === 0 ? (
+            <Typography as="p" className="text-xs text-muted-foreground font-bold text-center py-4">No departments found</Typography>
+          ) : (
+            filtered.map((dept) => {
+              const isActive = dept.id === activeDepartmentId;
+              const Icon = dept.icon || Briefcase;
+              return (
+                <button
+                  key={dept.id}
+                  type="button"
+                  onClick={() => onSelect(dept.id)}
                   className={cn(
-                    "size-[40px] flex items-center justify-center rounded-[8.89px] shrink-0",
-                    themeBgStyles[dept.theme]
+                    "w-full flex items-start gap-[12px] px-[12px] py-[11px] rounded-[8px] text-left transition-all duration-200 cursor-pointer border-l-4",
+                    isActive
+                      ? "bg-[rgba(0,71,255,0.1)] border-[#0047ff]"
+                      : "bg-[#edf2f7] border-l-transparent hover:bg-[#edf2f7]/80",
                   )}>
-                  <dept.icon
-                    className={cn("size-[14px]", themeTextStyles[dept.theme])}
-                  />
-                </div>
 
-                {/* Content */}
-                <div className="flex flex-col gap-[6px] flex-1 min-w-0">
-                  <div className="flex flex-col gap-[4px]">
-                    <p
-                      className={cn(
-                        "text-[14px] font-bold leading-[16px] whitespace-nowrap truncate",
-                        themeTextStyles[dept.theme]
-                      )}>
-                      {dept.name}
-                    </p>
-
-                    <p className="text-[12px] font-bold text-[#707070] leading-[16px] line-clamp-2">
-                      {dept.description}
-                    </p>
+                  {/* Icon */}
+                  <div
+                    className={cn(
+                      "size-[40px] flex items-center justify-center rounded-[8.89px] shrink-0",
+                      themeBgStyles[dept.theme] || themeBgStyles.primary
+                    )}>
+                    <Icon
+                      className={cn("size-[14px]", themeTextStyles[dept.theme] || themeTextStyles.primary)}
+                    />
                   </div>
 
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-[4px]">
-                      <Users className="size-[12px] text-[#707070] shrink-0" />
-                      <span className="text-[12px] font-bold text-[#707070] leading-[16px] whitespace-nowrap">
-                        {dept.memberCount} members
-                      </span>
+                  {/* Content */}
+                  <div className="flex flex-col gap-[6px] flex-1 min-w-0">
+                    <div className="flex flex-col gap-[4px]">
+                      <p
+                        className={cn(
+                          "text-[14px] font-bold leading-[16px] whitespace-nowrap truncate",
+                          themeTextStyles[dept.theme] || themeTextStyles.primary
+                        )}>
+                        {dept.name}
+                      </p>
+
+                      <p className="text-[12px] font-bold text-[#707070] leading-[16px] line-clamp-2">
+                        {dept.description}
+                      </p>
                     </div>
-                    <div className="flex items-center gap-[4px]">
-                      <span className="text-[12px] font-bold text-[#707070] leading-[16px]">
-                        {dept.headLabel}:
-                      </span>
-                      <span className="text-[12px] font-bold text-[#0047ff] leading-[16px] whitespace-nowrap">
-                        {dept.headName}
-                      </span>
+
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center gap-[4px]">
+                        <Users className="size-[12px] text-[#707070] shrink-0" />
+                        <span className="text-[12px] font-bold text-[#707070] leading-[16px] whitespace-nowrap">
+                          {dept.memberCount} members
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-[4px]">
+                        <span className="text-[12px] font-bold text-[#707070] leading-[16px]">
+                          {dept.headLabel}:
+                        </span>
+                        <span className="text-[12px] font-bold text-[#0047ff] leading-[16px] whitespace-nowrap">
+                          {dept.headName}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })
+          )}
         </div>
       </div>
 

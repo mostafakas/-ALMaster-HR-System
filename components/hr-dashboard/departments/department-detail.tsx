@@ -5,7 +5,6 @@ import { ChevronDown, Users } from "lucide-react";
 import { Edit2 } from "@/components/shared/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { departments } from "./department-panel";
 import { UserRound } from "lucide-react";
 import {
   statusConfig,
@@ -135,39 +134,8 @@ function CollapsibleSection({
   );
 }
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
-
-const HEAD_MEMBER: MiniEmployeeCardProps = {
-  name: "Matt Scott",
-  role: "Head of Programming",
-  avatar: "https://ui.shadcn.com/avatars/01.png",
-  status: "Online",
-  roleType: "head",
-};
-
-const TEAM_A_MEMBERS: MiniEmployeeCardProps[] = [
-  {
-    name: "Daniel Brown",
-    role: "Programming Team Leader (A)",
-    avatar: "https://ui.shadcn.com/avatars/01.png",
-    status: "Online",
-    roleType: "team_leader",
-  },
-  {
-    name: "Daniel Brown",
-    role: "Programmer (A)",
-    avatar: "https://ui.shadcn.com/avatars/01.png",
-    status: "Online",
-    roleType: "member",
-  },
-  {
-    name: "Daniel Brown",
-    role: "Programmer (A)",
-    avatar: "https://ui.shadcn.com/avatars/01.png",
-    status: "Online",
-    roleType: "member",
-  },
-];
+import { useGetDepartmentsQuery } from "@/lib/store/services/departmentApi";
+import { useGetEmployeesQuery } from "@/lib/store/services/employeeApi";
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
@@ -176,16 +144,37 @@ interface DepartmentDetailProps {
 }
 
 export function DepartmentDetail({ departmentId }: DepartmentDetailProps) {
-  const dept = departments.find((d) => d.id === departmentId) ?? departments[0];
+  const { data: deptData } = useGetDepartmentsQuery();
+  const { data: empData } = useGetEmployeesQuery();
+
+  const dept = deptData?.items.find((d) => d.id === departmentId);
+  
+  // Real employees belonging to this department
+  const employees = React.useMemo(() => {
+    if (!empData?.items) return [];
+    return empData.items.filter((emp: any) => emp.departmentId === departmentId);
+  }, [empData, departmentId]);
+
   const [editOpen, setEditOpen] = React.useState(false);
+
+  if (!dept) {
+    return (
+      <div className="flex flex-col gap-[20px] p-[24px] pb-[100px]">
+        <p className="text-muted-foreground font-bold">Please select a department</p>
+      </div>
+    );
+  }
 
   const editInitialData = {
     name: dept.name,
-    description: dept.description,
-    color: dept.color,
-    headIds: ["2"],
+    description: dept.description || "",
+    color: "#0047ff",
+    headIds: [],
     employeeIds: [],
   };
+  
+  const heads = employees.filter(e => e.role === "Manager" || e.role === "Admin" || e.role === "Head");
+  const members = employees.filter(e => e.role !== "Manager" && e.role !== "Admin" && e.role !== "Head");
 
   return (
     <div className="flex flex-col gap-[20px] p-[24px] pb-[100px]">
@@ -220,35 +209,40 @@ export function DepartmentDetail({ departmentId }: DepartmentDetailProps) {
       <CollapsibleSection
         icon={UserRound}
         title={`Head of ${dept.name.replace(" Department", "")}`}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-[12px] w-full">
-          <MiniEmployeeCard {...HEAD_MEMBER} />
-        </div>
+        {heads.length === 0 ? (
+           <p className="text-xs font-bold text-muted-foreground py-2">No department head assigned.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[12px] w-full">
+            {heads.map(head => (
+              <MiniEmployeeCard key={head.id} name={head.fullName || "Unknown"} role={head.jobTitle || head.role || "Manager"} avatar="" status="Online" roleType="head" />
+            ))}
+          </div>
+        )}
       </CollapsibleSection>
 
-      {/* Team A Section */}
+      {/* Employees Section */}
       <CollapsibleSection
         icon={Users}
-        title="Team A"
+        title="Department Employees"
         badges={
           <>
             <div className="bg-[rgba(0,71,255,0.08)] px-[8px] py-[4px] rounded-[6px]">
               <span className="text-[12px] font-bold text-[#0047ff] leading-[14px]">
-                4 Employees
-              </span>
-            </div>
-            <div className="bg-[rgba(0,185,39,0.1)] px-[8px] py-[4px] rounded-[6px]">
-              <span className="text-[12px] font-bold text-[#00b927] leading-[14px]">
-                4 Online
+                {members.length} Employees
               </span>
             </div>
           </>
         }>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-[12px] w-full">
-          {TEAM_A_MEMBERS.map((member, i) => (
-            <MiniEmployeeCard key={i} {...member} />
-          ))}
-        </div>
+        {members.length === 0 ? (
+          <p className="text-xs font-bold text-muted-foreground py-2">No employees found in this department.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[12px] w-full">
+            {members.map((member) => (
+              <MiniEmployeeCard key={member.id} name={member.fullName || "Unknown"} role={member.jobTitle || member.role || "Employee"} avatar="" status="Online" roleType="member" />
+            ))}
+          </div>
+        )}
       </CollapsibleSection>
     </div>
   );

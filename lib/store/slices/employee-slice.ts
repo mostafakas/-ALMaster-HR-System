@@ -23,13 +23,7 @@ const initialState: EmployeeState = {
   list: [],
   loading: false,
   error: null,
-  selectedEmployee: {
-    id: "4",
-    name: "John Smith",
-    role: "Content Manager",
-    status: "Online",
-    avatar: "https://ui.shadcn.com/avatars/04.png",
-  },
+  selectedEmployee: null,
 };
 
 const employeeSlice = createSlice({

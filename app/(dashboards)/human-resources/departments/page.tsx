@@ -6,7 +6,7 @@ import { DepartmentDetail } from "@/components/hr-dashboard/departments/departme
 
 export default function DepartmentsPage() {
   const [activeDepartmentId, setActiveDepartmentId] =
-    React.useState("programming");
+    React.useState("");
 
   return (
     <>
@@ -15,7 +15,13 @@ export default function DepartmentsPage() {
         onSelect={setActiveDepartmentId}
       />
       <main className="flex-1 flex flex-col h-full overflow-y-auto no-scrollbar bg-white shadow-[-10px_0_30px_rgba(0,0,0,0.02)] z-10">
-        <DepartmentDetail departmentId={activeDepartmentId} />
+        {activeDepartmentId ? (
+          <DepartmentDetail departmentId={activeDepartmentId} />
+        ) : (
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-muted-foreground font-bold">
+            <p>Please select a department to view details</p>
+          </div>
+        )}
       </main>
     </>
   );
